@@ -1,0 +1,5 @@
+pydantic>=2.7,<2.12
+fastmcp==2.9.0
+pytest==8.4.1
+pytest-asyncio==1.0.0
+uv==0.7.17

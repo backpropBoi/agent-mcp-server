@@ -1,0 +1,13 @@
+environment: # Required, qa/prod
+domain: # Required, , cb/zuul/bbscm/common
+tag: # Required for docker image
+ingress:
+  host:   # Optional. set to empty by default, otherwise this value will be used with highest priority
+port: 8080
+
+# No need to update config map configurations
+configMaps:
+  - name: local-mcp-servers-config
+    file: mcp_servers.json
+    mountPath: /app/app/mcp_servers.json
+    subPath: mcp_servers.json

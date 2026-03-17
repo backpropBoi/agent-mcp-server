@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.domain }}-mcp-server
+  labels:
+    app: {{ .Values.domain }}-mcp-server
+  annotations:
+    {{- $root := . -}}
+    {{- range $cm := $root.Values.configMaps }}
+    checksum/{{ $cm.name }}: "{{ $root.Files.Get $cm.file | sha256sum }}"
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.domain }}-mcp-server
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.domain }}-mcp-server
+    spec:
+      containers:
+        - name: {{ .Values.domain }}-mcp-server-container
+          image: {{ include "chart.fullImage" . | quote }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.port }}
+          volumeMounts: # Required for podman
+          {{- range .Values.configMaps }}
+          - name: {{ .name }}-volume
+            mountPath: {{ .mountPath }}
+            subPath: {{ .subPath }}
+          {{- end }}
+      imagePullSecrets:
+        - name: espoo3-oscm
+      volumes:
+      {{- range .Values.configMaps }}
+      - name: {{ .name }}-volume
+        configMap:
+          name: {{ .name }}
+      {{- end }}
