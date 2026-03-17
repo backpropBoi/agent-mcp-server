@@ -12,7 +12,7 @@ def load_tools(package):
     package_name = package
     package = importlib.import_module(package_name)
     mcps = {}
-    for _, name, _ in pkgutil.iter_modules(package.__path_):
+    for _, name, _ in pkgutil.iter_modules(package.__path__):
         full_name = f"{package_name}.{name}"
         module = importlib.import_module(full_name)
         if hasattr(module, 'mcp'):
@@ -24,7 +24,7 @@ def load_tools(package):
     return mcps
 
 def register_tools(mcp_server):
-    if _package_:
+    if __package__:
         tool_module = 'app.tools'
     else:
         tool_module = 'tools'
@@ -33,7 +33,7 @@ def register_tools(mcp_server):
         mcp_server.mount(app)
 
 def register_proxy(mcp_server):
-    root_path = Path(_file_).absolute().parent
+    root_path = Path(__file__).absolute().parent
     with open(f"{root_path}/mcp_servers.json", 'r', encoding='utf-8') as file:
         config = json.load(file)
         if config:
@@ -45,5 +45,5 @@ register_tools(top_mcp)
 register_proxy(top_mcp)
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     top_mcp.run(transport="streamable-http", host="0.0.0.0", port=8080)
