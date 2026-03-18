@@ -6,11 +6,9 @@ load_dotenv()
 
 mcp = FastMCP("FlightTools")
 
-# ---------------------------------------------------------------------------
-# OpenSky Network API — completely free, no API key required
+
 # Docs: https://openskynetwork.github.io/opensky-api/
-# Optional: set OPENSKY_USERNAME and OPENSKY_PASSWORD for higher rate limits
-# ---------------------------------------------------------------------------
+
 OPENSKY_BASE_URL = "https://opensky-network.org/api"
 OPENSKY_USERNAME = os.getenv("OPENSKY_USERNAME", "")
 OPENSKY_PASSWORD = os.getenv("OPENSKY_PASSWORD", "")
@@ -26,9 +24,8 @@ def _get(endpoint: str, params: dict | None = None) -> dict:
         return response.json()
 
 
-# ---------------------------------------------------------------------------
 # Tools
-# ---------------------------------------------------------------------------
+
 
 @mcp.tool()
 def get_live_flights() -> dict:
